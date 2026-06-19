@@ -12,8 +12,8 @@
          with your actual Supabase credentials to enable serverless cloud
          database and notes storage.
        ---------------------------------------------------------------- */
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://kkdyznscdhqoazutvwfe.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtrZHl6bnNjZGhxb2F6dXR2d2ZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODQ5OTksImV4cCI6MjA5NzQ2MDk5OX0.-wHhxCBFnsHHeSa_2JIgyL-zTqUszs2anFjZpyCaCRU';
 
     let supabase = null;
     if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && typeof window.supabase !== 'undefined') {

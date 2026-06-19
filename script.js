@@ -232,28 +232,7 @@
             return;
         }
         try {
-            // Check if modules table is empty
-            const { count, error: countErr } = await supabase
-                .from('modules')
-                .select('*', { count: 'exact', head: true });
-            
-            if (countErr) throw countErr;
-
-            if (count === 0) {
-                // Populate default module records
-                const defaultRows = MODULES.map(m => ({
-                    id: m.id,
-                    title: m.title,
-                    description: m.description,
-                    file_url: m.file,
-                    size: m.size,
-                    updated_at: m.updated
-                }));
-                const { error: insErr } = await supabase.from('modules').insert(defaultRows);
-                if (insErr) throw insErr;
-            }
-
-            // Fetch modules details
+            // Fetch modules details using a standard GET request (avoiding HEAD check)
             const { data, error: selectErr } = await supabase
                 .from('modules')
                 .select('*')

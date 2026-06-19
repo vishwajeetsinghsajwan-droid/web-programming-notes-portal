@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web Programming Notes Portal — Access, preview, and download Module 1–5 notes for Web Programming in one place.">
+    <meta name="keywords" content="web programming, notes, modules, PDF, student portal, study material">
+    <meta name="author" content="Web Programming Notes Portal">
+    <title>Web Programming Notes Portal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==================== PRELOADER ==================== -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="preloader-bar">
+                <div class="preloader-bar-fill"></div>
+            </div>
+            <p class="preloader-text">Loading Notes Portal…</p>
+        </div>
+    </div>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav id="mainNavbar" class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="brand-icon"><i class="fas fa-graduation-cap"></i></span>
+                <span class="brand-text">WP Notes</span>
+            </a>
+
+            <div class="navbar-actions-mobile d-lg-none d-flex align-items-center gap-2">
+                <button id="darkModeToggleMobile" class="btn-theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#modules">Modules</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item d-lg-none"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal"><i class="fas fa-cloud-upload-alt me-1"></i> Upload Notes</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-sm btn-outline-primary px-3 rounded-pill d-none d-lg-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Notes
+                    </button>
+                    <button id="darkModeToggle" class="btn-theme-toggle d-none d-lg-flex" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section id="home" class="hero-section">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+        <div class="container hero-container">
+            <div class="row align-items-center min-vh-hero">
+                <div class="col-lg-7">
+                    <div class="hero-content" data-animate="fade-up">
+                        <span class="hero-badge">
+                            <i class="fas fa-star"></i> Your Study Companion
+                        </span>
+                        <h1 class="hero-title">
+                            Web Programming<br>
+                            <span class="gradient-text">Notes Portal</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Access all module notes in one place — preview, download, and study smarter with organized resources for Modules 1 through 5.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#modules" class="btn btn-hero-primary">
+                                <i class="fas fa-book-reader"></i> Browse Modules
+                            </a>
+                            <a href="#about" class="btn btn-hero-secondary">
+                                <i class="fas fa-info-circle"></i> Learn More
+                            </a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="5">0</span>
+                                <span class="stat-label">Modules</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="100">0</span><span class="stat-suffix">+</span>
+                                <span class="stat-label">Pages</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="24">0</span><span class="stat-suffix">/7</span>
+                                <span class="stat-label">Access</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="hero-illustration" data-animate="fade-left">
+                        <div class="floating-card card-1">
+                            <i class="fas fa-code"></i>
+                            <span>HTML & CSS</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="fas fa-laptop-code"></i>
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="fas fa-server"></i>
+                            <span>Backend</span>
+                        </div>
+                        <div class="floating-card card-4">
+                            <i class="fas fa-database"></i>
+                            <span>Databases</span>
+                        </div>
+                        <div class="hero-circle-main">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64 C360,120 720,0 1080,64 C1260,96 1380,80 1440,64 L1440,120 L0,120 Z" fill="var(--bg-primary)"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ==================== SEARCH SECTION ==================== -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-wrapper" data-animate="fade-up">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search modules by name or topic…" autocomplete="off">
+                    <button id="searchClear" class="search-clear d-none" aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tag" data-search="Module 1">Module 1</span>
+                    <span class="search-tag" data-search="Module 2">Module 2</span>
+                    <span class="search-tag" data-search="Module 3">Module 3</span>
+                    <span class="search-tag" data-search="Module 4">Module 4</span>
+                    <span class="search-tag" data-search="Module 5">Module 5</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MODULES SECTION ==================== -->
+    <section id="modules" class="modules-section">
+        <div class="container">
+            <div class="section-header" data-animate="fade-up">
+                <span class="section-badge"><i class="fas fa-layer-group"></i> Course Material</span>
+                <h2 class="section-title">Explore All Modules</h2>
+                <p class="section-subtitle">Browse through all five modules. Preview PDFs in the browser or download them for offline study.</p>
+            </div>
+
+            <div id="modulesGrid" class="row g-4">
+                <!-- Module cards are injected by JavaScript -->
+            </div>
+
+            <div id="noResults" class="no-results d-none" data-animate="fade-up">
+                <div class="no-results-inner">
+                    <i class="fas fa-search"></i>
+                    <h3>No modules found</h3>
+                    <p>Try a different search term or browse all modules.</p>
+                    <button id="clearSearchBtn" class="btn btn-outline-primary">Show All Modules</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT SECTION ==================== -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header" data-animate="fade-up">
+                <span class="section-badge"><i class="fas fa-lightbulb"></i> Why This Portal</span>
+                <h2 class="section-title">Built for Students</h2>
+                <p class="section-subtitle">Everything you need in one place — no logins, no databases, just notes.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="0">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-eye"></i></div>
+                        <h3>In-Browser Preview</h3>
+                        <p>View any module's PDF directly in the browser without downloading.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-download"></i></div>
+                        <h3>Instant Download</h3>
+                        <p>Download PDFs with one click for offline study on any device.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Fully Responsive</h3>
+                        <p>Works perfectly on phones, tablets, laptops, and desktops.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3" data-animate="fade-up" data-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-moon"></i></div>
+                        <h3>Dark Mode</h3>
+                        <p>Toggle dark mode for comfortable reading at night.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT / FOOTER ==================== -->
+    <footer id="contact" class="site-footer">
+        <div class="footer-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64 C480,0 960,120 1440,64 L1440,0 L0,0 Z" fill="var(--bg-primary)"></path>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <span class="brand-icon"><i class="fas fa-graduation-cap"></i></span>
+                        <span class="brand-text">WP Notes Portal</span>
+                    </div>
+                    <p class="footer-description">
+                        A centralized portal for Web Programming course notes. Built as a static site for easy deployment and maintenance.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#modules">Modules</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h4 class="footer-heading">Modules</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-module-link="1">Module 1</a></li>
+                        <li><a href="#" data-module-link="2">Module 2</a></li>
+                        <li><a href="#" data-module-link="3">Module 3</a></li>
+                        <li><a href="#" data-module-link="4">Module 4</a></li>
+                        <li><a href="#" data-module-link="5">Module 5</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h4 class="footer-heading">Get in Touch</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:info@wpnotes.edu">info@wpnotes.edu</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Computer Science Dept.</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> Web Programming Notes Portal. All rights reserved.</p>
+                <p>Designed with <i class="fas fa-heart text-danger"></i> for students</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== PDF VIEWER MODAL ==================== -->
+    <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content pdf-modal-content">
+                <div class="modal-header pdf-modal-header">
+                    <div class="pdf-modal-title-wrapper">
+                        <i class="fas fa-file-pdf"></i>
+                        <h5 class="modal-title" id="pdfModalLabel">Module Notes</h5>
+                    </div>
+                    <div class="pdf-modal-controls">
+                        <button class="pdf-control-btn" id="pdfZoomOut" title="Zoom Out">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <span class="pdf-zoom-level" id="pdfZoomLevel">100%</span>
+                        <button class="pdf-control-btn" id="pdfZoomIn" title="Zoom In">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="pdf-control-btn" id="pdfFullscreen" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="pdf-control-btn" id="pdfDownloadModal" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button type="button" class="pdf-control-btn pdf-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body pdf-modal-body">
+                    <div class="pdf-loading" id="pdfLoading">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading…</span>
+                        </div>
+                        <p>Loading PDF…</p>
+                    </div>
+                    <iframe id="pdfViewer" class="pdf-iframe" title="PDF Viewer"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATIONS ==================== -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer">
+        <div id="downloadToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle toast-icon-success"></i>
+                    <span id="toastMessage">Download started successfully!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SCROLL TO TOP ==================== -->
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ==================== UPLOAD MODAL ==================== -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content upload-modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">
+                        <i class="fas fa-cloud-upload-alt text-primary me-2"></i>Upload Course Material
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label for="uploadModuleSelect" class="form-label fw-bold">Select Module</label>
+                            <select class="form-select" id="uploadModuleSelect" required>
+                                <option value="" disabled selected>Choose a module…</option>
+                                <option value="1">Module 1 – Introduction to Web Technologies</option>
+                                <option value="2">Module 2 – HTML5 & CSS3 Fundamentals</option>
+                                <option value="3">Module 3 – JavaScript & DOM Manipulation</option>
+                                <option value="4">Module 4 – Server-Side Programming</option>
+                                <option value="5">Module 5 – Databases & Full-Stack Integration</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Choose Notes File (PDF, PPT, or PPTX)</label>
+                            <div class="upload-dropzone" id="uploadDropzone">
+                                <i class="fas fa-cloud-upload-alt upload-dropzone-icon" id="dropzoneIcon"></i>
+                                <p class="upload-dropzone-text" id="dropzoneText">Drag and drop file here, or click to browse</p>
+                                <span class="upload-dropzone-subtext">Supports PDF, PPT, and PPTX up to 20MB</span>
+                                <input type="file" id="fileInput" accept=".pdf,.ppt,.pptx" class="d-none" required>
+                            </div>
+                            <div id="selectedFileInfo" class="selected-file-info d-none">
+                                <div class="file-info-icon"><i class="fas fa-file-pdf"></i></div>
+                                <div class="file-info-details">
+                                    <span class="file-info-name" id="selectedFileName">filename.pdf</span>
+                                    <span class="file-info-size" id="selectedFileSize">0 KB</span>
+                                </div>
+                                <button type="button" class="btn-remove-file" id="btnRemoveFile" title="Remove file">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="uploadProgressContainer" class="d-none mb-3">
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="uploadProgressBar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1 fs-xs text-secondary">
+                                <span id="uploadProgressText">Uploading…</span>
+                                <span id="uploadProgressPercent">0%</span>
+                            </div>
+                        </div>
+
+                        <div id="uploadMessage" class="alert d-none" role="alert"></div>
+
+                        <div class="modal-footer px-0 pb-0 pt-3 border-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="btnSubmitUpload" disabled>
+                                <i class="fas fa-upload me-1"></i> Upload File
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

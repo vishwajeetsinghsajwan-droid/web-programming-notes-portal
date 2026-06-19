@@ -6,12 +6,25 @@
     'use strict';
 
     /* ------------------------------------------------------------------
+       SUPABASE CONFIGURATION
+       ----------------------------------------------------------------
+       ★ ADMIN NOTE: Replace 'YOUR_SUPABASE_URL' and 'YOUR_SUPABASE_ANON_KEY'
+         with your actual Supabase credentials to enable serverless cloud
+         database and notes storage.
+       ---------------------------------------------------------------- */
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    let supabase = null;
+    if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && typeof window.supabase !== 'undefined') {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    /* ------------------------------------------------------------------
        MODULE DATA
        ----------------------------------------------------------------
-       ★ ADMIN NOTE: To update a module's PDF, simply replace the
-         corresponding file in the /pdfs/ folder. The filenames below
-         must match. You can also tweak descriptions, sizes, and dates
-         here without touching HTML or CSS.
+       These local entries act as the default fallback structure if 
+       Supabase is not configured yet.
        ---------------------------------------------------------------- */
     const MODULES = [
         {
@@ -213,7 +226,60 @@
         requestAnimationFrame(() => triggerAnimations());
     };
 
-    renderCards(MODULES);
+    const fetchModules = async () => {
+        if (!supabase) {
+            renderCards(MODULES);
+            return;
+        }
+        try {
+            // Check if modules table is empty
+            const { count, error: countErr } = await supabase
+                .from('modules')
+                .select('*', { count: 'exact', head: true });
+            
+            if (countErr) throw countErr;
+
+            if (count === 0) {
+                // Populate default module records
+                const defaultRows = MODULES.map(m => ({
+                    id: m.id,
+                    title: m.title,
+                    description: m.description,
+                    file_url: m.file,
+                    size: m.size,
+                    updated_at: m.updated
+                }));
+                const { error: insErr } = await supabase.from('modules').insert(defaultRows);
+                if (insErr) throw insErr;
+            }
+
+            // Fetch modules details
+            const { data, error: selectErr } = await supabase
+                .from('modules')
+                .select('*')
+                .order('id', { ascending: true });
+            
+            if (selectErr) throw selectErr;
+
+            if (data && data.length > 0) {
+                data.forEach(row => {
+                    const mod = MODULES.find(m => m.id === row.id);
+                    if (mod) {
+                        mod.file = row.file_url || mod.file;
+                        mod.size = row.size || mod.size;
+                        mod.updated = row.updated_at || mod.updated;
+                        const ext = mod.file.split('.').pop().toLowerCase();
+                        mod.icon = (ext === 'pdf') ? 'fa-file-pdf' : 'fa-file-powerpoint';
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn('Supabase fetch failed, falling back to local files:', e);
+        }
+        renderCards(MODULES);
+    };
+
+    fetchModules();
 
     /* ----------------------------------------------------------------
        SEARCH
@@ -599,14 +665,19 @@
         }
     }
 
-    uploadForm?.addEventListener('submit', (e) => {
+    uploadForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!selectedFile || !uploadModuleSelect.value) return;
+
+        if (!supabase) {
+            showUploadMessage('danger', 'Supabase configuration is missing. Add your project credentials at the top of script.js to activate uploads.');
+            return;
+        }
 
         const moduleId = parseInt(uploadModuleSelect.value, 10);
         const ext = selectedFile.name.split('.').pop().toLowerCase();
         
-        // Disable inputs
+        // Disable form elements
         uploadModuleSelect.disabled = true;
         btnSubmitUpload.disabled = true;
         if (btnRemoveFile) btnRemoveFile.disabled = true;
@@ -614,76 +685,90 @@
 
         uploadProgressCont?.classList.remove('d-none');
         if (uploadProgressBar) {
-            uploadProgressBar.style.width = '0%';
-            uploadProgressBar.setAttribute('aria-valuenow', 0);
+            uploadProgressBar.style.width = '10%';
+            uploadProgressBar.setAttribute('aria-valuenow', 10);
         }
-        if (uploadProgressPercent) uploadProgressPercent.textContent = '0%';
-        if (uploadProgressText) uploadProgressText.textContent = 'Uploading file…';
+        if (uploadProgressPercent) uploadProgressPercent.textContent = '10%';
+        if (uploadProgressText) uploadProgressText.textContent = 'Initializing upload process…';
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', `/upload?module=${moduleId}&ext=${ext}`, true);
+        try {
+            // Generate filename based on module and timestamp to prevent caching issues
+            const timestamp = Date.now();
+            const fileName = `module${moduleId}_${timestamp}.${ext}`;
 
-        xhr.upload.addEventListener('progress', (e) => {
-            if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                if (uploadProgressBar) {
-                    uploadProgressBar.style.width = `${percent}%`;
-                    uploadProgressBar.setAttribute('aria-valuenow', percent);
-                }
-                if (uploadProgressPercent) uploadProgressPercent.textContent = `${percent}%`;
-                if (percent === 100 && uploadProgressText) {
-                    uploadProgressText.textContent = 'Saving file on server…';
-                }
+            if (uploadProgressText) uploadProgressText.textContent = 'Sending file to Supabase Storage…';
+            if (uploadProgressBar) {
+                uploadProgressBar.style.width = '30%';
+                uploadProgressBar.setAttribute('aria-valuenow', 30);
             }
-        });
+            if (uploadProgressPercent) uploadProgressPercent.textContent = '30%';
 
-        xhr.addEventListener('load', () => {
-            uploadModuleSelect.disabled = false;
-            btnSubmitUpload.disabled = false;
-            if (btnRemoveFile) btnRemoveFile.disabled = false;
+            // 1. Upload to Supabase storage bucket 'notes'
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('notes')
+                .upload(fileName, selectedFile, { cacheControl: '3600', upsert: true });
 
-            if (xhr.status === 200) {
-                // Update internal array
-                const updatedMod = MODULES.find(m => m.id === moduleId);
-                if (updatedMod) {
-                    updatedMod.file = `pdfs/module${moduleId}.${ext}`;
-                    updatedMod.size = formatBytes(selectedFile.size);
-                    updatedMod.updated = new Date().toISOString().split('T')[0];
-                    updatedMod.icon = (ext === 'pdf') ? 'fa-file-pdf' : 'fa-file-powerpoint';
-                }
+            if (uploadError) throw uploadError;
 
-                // Re-render
-                renderCards(MODULES);
+            if (uploadProgressText) uploadProgressText.textContent = 'Retrieving public file link…';
+            if (uploadProgressBar) {
+                uploadProgressBar.style.width = '60%';
+                uploadProgressBar.setAttribute('aria-valuenow', 60);
+            }
+            if (uploadProgressPercent) uploadProgressPercent.textContent = '60%';
 
-                showUploadMessage('success', 'File uploaded and applied successfully!');
-                showToast(`Successfully uploaded Module ${moduleId} notes!`);
+            // 2. Get the public file URL
+            const { data: { publicUrl } } = supabase.storage.from('notes').getPublicUrl(fileName);
+
+            if (uploadProgressText) uploadProgressText.textContent = 'Updating database metadata…';
+            if (uploadProgressBar) {
+                uploadProgressBar.style.width = '80%';
+                uploadProgressBar.setAttribute('aria-valuenow', 80);
+            }
+            if (uploadProgressPercent) uploadProgressPercent.textContent = '80%';
+
+            // 3. Update the database table 'modules'
+            const { error: dbError } = await supabase.from('modules').update({
+                file_url: publicUrl,
+                size: formatBytes(selectedFile.size),
+                updated_at: new Date().toISOString().split('T')[0]
+            }).eq('id', moduleId);
+
+            if (dbError) throw dbError;
+
+            if (uploadProgressBar) {
+                uploadProgressBar.style.width = '100%';
+                uploadProgressBar.setAttribute('aria-valuenow', 100);
+            }
+            if (uploadProgressPercent) uploadProgressPercent.textContent = '100%';
+            if (uploadProgressText) uploadProgressText.textContent = 'Success!';
+
+            // Refresh cards metadata
+            await fetchModules();
+
+            showUploadMessage('success', 'File uploaded and notes metadata updated!');
+            showToast(`Successfully uploaded Module ${moduleId} notes!`);
+            
+            setTimeout(() => {
+                const modalEl = $('#uploadModal');
+                const bsModal = bootstrap.Modal.getInstance(modalEl);
+                if (bsModal) bsModal.hide();
                 
-                setTimeout(() => {
-                    const modalEl = $('#uploadModal');
-                    const bsModal = bootstrap.Modal.getInstance(modalEl);
-                    if (bsModal) bsModal.hide();
-                    
-                    uploadForm.reset();
-                    resetFileInput();
-                    uploadProgressCont?.classList.add('d-none');
-                    clearUploadMessage();
-                }, 1500);
-
-            } else {
-                showUploadMessage('danger', `Upload failed: ${xhr.responseText || 'Server error'}`);
+                uploadForm.reset();
+                resetFileInput();
                 uploadProgressCont?.classList.add('d-none');
-            }
-        });
+                clearUploadMessage();
+            }, 1500);
 
-        xhr.addEventListener('error', () => {
+        } catch (error) {
+            console.error('Upload process failed:', error);
+            showUploadMessage('danger', `Upload failed: ${error.message || error}`);
+            uploadProgressCont?.classList.add('d-none');
+        } finally {
             uploadModuleSelect.disabled = false;
             btnSubmitUpload.disabled = false;
             if (btnRemoveFile) btnRemoveFile.disabled = false;
-            showUploadMessage('danger', 'Network error during upload.');
-            uploadProgressCont?.classList.add('d-none');
-        });
-
-        xhr.send(selectedFile);
+        }
     });
 
     /* ----------------------------------------------------------------
